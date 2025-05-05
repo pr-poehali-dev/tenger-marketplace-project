@@ -1,10 +1,10 @@
-import { useState } from "react");
-import { Link, useNavigate } from "react-router-dom");
-import { Button } from "@/components/ui/button");
-import { Input } from "@/components/ui/input");
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card");
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs");
-import { Label } from "@/components/ui/label");
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const Auth = () => {
     
     // Проверка совпадения паролей
     if (registerData.password !== registerData.passwordConfirm) {
-      alert("Пароли не совпадают");
+      alert("*");
       return;
     }
     
@@ -84,7 +84,7 @@ const Auth = () => {
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">Tenger</CardTitle>
           <CardDescription>
-            Войдите в свой аккаунт или зарегистрируйтесь
+            Войдите в свой аккаунт или зарегиструйтесь
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -97,7 +97,7 @@ const Auth = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
+                  <Label htmlFor="login-email">Холдинг</Label>
                   <Input 
                     id="login-email" 
                     type="email" 
@@ -123,7 +123,7 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Вход..." : "Войти"}
+                  {isLoading ? "*Вход..." : "Войти"}
                 </Button>
               </form>
             </TabsContent>
@@ -134,14 +134,14 @@ const Auth = () => {
                   <Label htmlFor="reg-name">Имя</Label>
                   <Input 
                     id="reg-name" 
-                    placeholder="Иван Иванов" 
+                    placeholder="*Иван *Иванов" 
                     required 
                     value={registerData.name}
                     onChange={handleRegisterChange}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="reg-email">Email</Label>
+                  <Label htmlFor="reg-email">Холдинг</Label>
                   <Input 
                     id="reg-email" 
                     type="email" 
@@ -162,7 +162,7 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="reg-passwordConfirm">Подтвердите пароль</Label>
+                  <Label htmlFor="reg-passwordConfirm">Подфирмите пароль</Label>
                   <Input 
                     id="reg-passwordConfirm" 
                     type="password" 
@@ -172,7 +172,7 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Регистрация..." : "Зарегистрироваться"}
+                  {isLoading ? "*Регистрация..." : "Зарегистрироваться"}
                 </Button>
               </form>
             </TabsContent>

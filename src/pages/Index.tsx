@@ -1,13 +1,6 @@
-import { useState, useEffect } from "react");
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import Icon from "@/components/ui/icon";
+import { useState, useEffect } from "react"; import { Link } from "react-router-dom"; import { Button } from "@/components/ui/button"; import { Card, CardContent } from "@/components/ui/card"; import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; import { Input } from "@/components/ui/input"; import Icon from "@/components/ui/icon"; 
 
-const Index = () => {
-  const [products, setProducts] = useState<any[]>([]);
+const Index = () => {  const [products, setProducts] = useState<any[]>([]);
 
   // Функция для генерации случайных товаров
   const generateRandomProducts = () => {
