@@ -1,34 +1,80 @@
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
+import { useState } from "react");
+import { Link, useNavigate } from "react-router-dom");
+import { Button } from "@/components/ui/button");
+import { Input } from "@/components/ui/input");
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card");
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs");
+import { Label } from "@/components/ui/label");
 
 const Auth = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: ""
+  });
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: ""
+  });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLoginChange = (e) => {
+    const { id, value } = e.target;
+    setLoginData(prev => ({ ...prev, [id.replace('login-', '')]: value }));
+  };
+
+  const handleRegisterChange = (e) => {
+    const { id, value } = e.target;
+    setRegisterData(prev => ({ ...prev, [id.replace('reg-', '')]: value }));
+  };
+
+  const handleLogin = (e) => {
     e.preventDefault();
     setIsLoading(true);
+    
     // Имитация входа
     setTimeout(() => {
       setIsLoading(false);
-      // После авторизации следует перенаправление
-      window.location.href = "/profile";
+      // Сохраняем данные пользователя (в реальном приложении это был бы токен и данные из API)
+      const userData = {
+        name: "Пользователь", // В реальном приложении получили бы из API
+        email: loginData.email,
+        registeredDate: new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      // После авторизации перенаправление
+      navigate("/profile");
     }, 1500);
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = (e) => {
     e.preventDefault();
+    
+    // Проверка совпадения паролей
+    if (registerData.password !== registerData.passwordConfirm) {
+      alert("Пароли не совпадают");
+      return;
+    }
+    
     setIsLoading(true);
+    
     // Имитация регистрации
     setTimeout(() => {
       setIsLoading(false);
-      // После регистрации следует перенаправление
-      window.location.href = "/profile";
+      
+      // Сохраняем данные пользователя
+      const userData = {
+        name: registerData.name,
+        email: registerData.email,
+        registeredDate: new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      // После регистрации перенаправление
+      navigate("/profile");
     }, 1500);
   };
 
@@ -51,17 +97,30 @@ const Auth = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="example@mail.com" required />
+                  <Label htmlFor="login-email">Email</Label>
+                  <Input 
+                    id="login-email" 
+                    type="email" 
+                    placeholder="example@mail.com" 
+                    required 
+                    value={loginData.email}
+                    onChange={handleLoginChange}
+                  />
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Пароль</Label>
+                    <Label htmlFor="login-password">Пароль</Label>
                     <Link to="/forgot-password" className="text-sm text-primary hover:underline">
                       Забыли пароль?
                     </Link>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input 
+                    id="login-password" 
+                    type="password" 
+                    required 
+                    value={loginData.password}
+                    onChange={handleLoginChange}
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Вход..." : "Войти"}
@@ -73,19 +132,44 @@ const Auth = () => {
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="reg-name">Имя</Label>
-                  <Input id="reg-name" placeholder="Иван Иванов" required />
+                  <Input 
+                    id="reg-name" 
+                    placeholder="Иван Иванов" 
+                    required 
+                    value={registerData.name}
+                    onChange={handleRegisterChange}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="reg-email">Email</Label>
-                  <Input id="reg-email" type="email" placeholder="example@mail.com" required />
+                  <Input 
+                    id="reg-email" 
+                    type="email" 
+                    placeholder="example@mail.com" 
+                    required 
+                    value={registerData.email}
+                    onChange={handleRegisterChange}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="reg-password">Пароль</Label>
-                  <Input id="reg-password" type="password" required />
+                  <Input 
+                    id="reg-password" 
+                    type="password" 
+                    required 
+                    value={registerData.password}
+                    onChange={handleRegisterChange}
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="reg-password-confirm">Подтвердите пароль</Label>
-                  <Input id="reg-password-confirm" type="password" required />
+                  <Label htmlFor="reg-passwordConfirm">Подтвердите пароль</Label>
+                  <Input 
+                    id="reg-passwordConfirm" 
+                    type="password" 
+                    required 
+                    value={registerData.passwordConfirm}
+                    onChange={handleRegisterChange}
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Регистрация..." : "Зарегистрироваться"}

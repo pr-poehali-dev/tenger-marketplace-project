@@ -1,21 +1,54 @@
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Icon from "@/components/ui/icon";
+import { useState, useEffect } from "react");
+import { Link } from "react-router-dom");
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs");
+import { Button } from "@/components/ui/button");
+import { Card, CardContent } from "@/components/ui/card");
+import { Avatar, AvatarFallback } from "@/components/ui/avatar");
+import Icon from "@/components/ui/icon");
 
 const Profile = () => {
-  // Пример данных пользователя
-  const [user] = useState({
-    name: "Иван Иванов",
-    email: "ivan@example.com",
-    phone: "+7 (999) 123-45-67",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format",
-    registeredDate: "Январь 2023",
-  });
+  // Получаем данные пользователя из localStorage (имитация авторизации)
+  const getUserData = () => {
+    // В реальном приложении здесь был бы запрос к API или Redux store
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      return JSON.parse(storedUser);
+    }
+    
+    // Данные по умолчанию, если не найдены в localStorage
+    return {
+      name: "Пользователь",
+      email: "user@example.com",
+      registeredDate: new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }),
+    };
+  };
+  
+  const [user, setUser] = useState(getUserData());
+
+  // Обновляем данные пользователя при изменении в localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(getUserData());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // При монтировании компонента имитируем регистрацию данных, 
+    // если в localStorage еще нет информации о пользователе
+    if (!localStorage.getItem('user')) {
+      const userFromRegistration = {
+        name: "Иван Иванов",
+        email: "ivan@example.com",
+        registeredDate: new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }),
+      };
+      localStorage.setItem('user', JSON.stringify(userFromRegistration));
+      setUser(userFromRegistration);
+    }
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   // Пример товаров пользователя
   const userProducts = [
@@ -45,7 +78,6 @@ const Profile = () => {
             <CardContent className="p-6">
               <div className="flex flex-col items-center text-center mb-6">
                 <Avatar className="w-20 h-20 mb-4">
-                  <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <h2 className="text-xl font-bold">{user.name}</h2>
@@ -56,10 +88,6 @@ const Profile = () => {
                 <div>
                   <p className="text-sm text-gray-500">Email</p>
                   <p>{user.email}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Телефон</p>
-                  <p>{user.phone}</p>
                 </div>
                 <Button variant="outline" className="w-full">
                   <Icon name="Settings" className="mr-2" size={16} />
@@ -93,8 +121,7 @@ const Profile = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {userProducts.map((product) => (
-                  <Card key={product.id} className={`overflow-hidden ${product.status === 'sold' ? 'opacity-70' : ''}`}>
-                    <div className="relative pt-[80%]">
+                  <Card key={product.id} className={`overflow-hidden ${product.status === 'sold' ? 'opacity-70' : ''}`}>                    <div className="relative pt-[80%]">
                       <img 
                         src={product.image} 
                         alt={product.title} 

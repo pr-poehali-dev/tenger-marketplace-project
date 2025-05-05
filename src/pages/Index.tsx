@@ -1,4 +1,4 @@
-
+import { useState, useEffect } from "react");
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,41 +7,50 @@ import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/icon";
 
 const Index = () => {
+  const [products, setProducts] = useState<any[]>([]);
+
+  // Функция для генерации случайных товаров
+  const generateRandomProducts = () => {
+    // Примеры товаров
+    const productExamples = [
+      { title: "iPhone 13", price: 45000, condition: "used", seller: "Анна К.", image: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=500&auto=format" },
+      { title: "Ноутбук Asus", price: 65000, condition: "new", seller: "МегаМаг", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format" },
+      { title: "Наушники Sony", price: 7500, condition: "used", seller: "Максим Д.", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format" },
+      { title: "Кроссовки Nike", price: 5900, condition: "new", seller: "СпортМаркет", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format" },
+      { title: "Книжная полка", price: 3500, condition: "used", seller: "Елена В.", image: "https://images.unsplash.com/photo-1588447555751-22da59a3d175?w=500&auto=format" },
+      { title: "Смарт-часы", price: 11900, condition: "new", seller: "ТехноСтор", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format" },
+      { title: "Фотоаппарат Canon", price: 24000, condition: "used", seller: "Артем П.", image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=500&auto=format" },
+      { title: "Велосипед Trek", price: 32000, condition: "used", seller: "Николай С.", image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&auto=format" },
+      { title: "Гитара акустическая", price: 15000, condition: "used", seller: "Сергей М.", image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=500&auto=format" },
+      { title: "Микроволновая печь", price: 4500, condition: "new", seller: "ДомоТех", image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=500&auto=format" },
+      { title: "PlayStation 5", price: 49990, condition: "new", seller: "ГеймШоп", image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=500&auto=format" },
+      { title: "Кофемашина", price: 18500, condition: "used", seller: "Ольга К.", image: "https://images.unsplash.com/photo-1516231415412-942a2481c44b?w=500&auto=format" },
+      { title: "Монитор Samsung", price: 12000, condition: "new", seller: "ЭлектроМир", image: "https://images.unsplash.com/photo-1547119957-637f8679db1e?w=500&auto=format" },
+      { title: "Диван угловой", price: 35000, condition: "used", seller: "Виктор П.", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format" },
+    ];
+    
+    // Перемешиваем массив товаров
+    const shuffled = [...productExamples].sort(() => 0.5 - Math.random());
+    
+    // Берем до 8 товаров из перемешанного массива
+    const randomProducts = shuffled.slice(0, 8).map((product, index) => ({
+      ...product,
+      id: index + 1,
+      // Случайно изменяем цены, чтобы товары выглядели по-разному
+      price: Math.round(product.price * (0.9 + Math.random() * 0.3))
+    }));
+    
+    return randomProducts;
+  };
+
+  // При каждой загрузке страницы генерируем новые товары
+  useEffect(() => {
+    setProducts(generateRandomProducts());
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Верхняя навигационная панель */}
-      <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-primary">Tenger</Link>
-          
-          <div className="relative w-full max-w-md mx-4">
-            <Input 
-              className="pl-10 pr-4 py-2 w-full" 
-              placeholder="Поиск товаров..."
-            />
-            <Icon name="Search" className="absolute left-3 top-3 text-gray-400" size={18} />
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <Link to="/favorites">
-              <Button variant="ghost" size="icon">
-                <Icon name="Heart" size={20} />
-              </Button>
-            </Link>
-            <Link to="/profile">
-              <Button variant="ghost" size="icon">
-                <Icon name="User" size={20} />
-              </Button>
-            </Link>
-            <Link to="/auth">
-              <Button variant="outline">Войти</Button>
-            </Link>
-            <Link to="/sell">
-              <Button>Продать</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Верхняя навигационная панель в Layout.tsx */}
 
       <main className="container mx-auto px-4 py-6">
         {/* Баннер */}
@@ -49,7 +58,9 @@ const Index = () => {
           <h1 className="text-3xl font-bold mb-4">Маркетплейс Tenger</h1>
           <p className="text-gray-600 mb-6">Покупайте и продавайте новые и Б/У товары</p>
           <div className="flex gap-4 justify-center">
-            <Button>Начать продавать</Button>
+            <Link to="/sell">
+              <Button>Начать продавать</Button>
+            </Link>
             <Button variant="outline">Узнать больше</Button>
           </div>
         </div>
@@ -83,78 +94,25 @@ const Index = () => {
             
             {/* Содержимое табов */}
             <TabsContent value="all" className="mt-0">
-              <ProductGrid />
+              <ProductGrid products={products} />
             </TabsContent>
             <TabsContent value="new" className="mt-0">
-              <ProductGrid condition="new" />
+              <ProductGrid products={products} condition="new" />
             </TabsContent>
             <TabsContent value="used" className="mt-0">
-              <ProductGrid condition="used" />
+              <ProductGrid products={products} condition="used" />
             </TabsContent>
           </Tabs>
         </div>
       </main>
 
-      {/* Футер */}
-      <footer className="bg-gray-50 border-t border-gray-200 py-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="font-semibold mb-4">О Tenger</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary">О нас</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Как это работает</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Блог</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Поддержка</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary">Центр помощи</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Связаться с нами</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Правила сайта</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Покупателям</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary">Безопасная сделка</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Отзывы</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Гарантии</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Продавцам</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary">Как продавать</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Правила продажи</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Тарифы</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-200 mt-8 pt-6 text-center text-gray-500 text-sm">
-            <p>© 2025 Tenger. Все права защищены.</p>
-          </div>
-        </div>
-      </footer>
+      {/* Футер в Layout.tsx */}
     </div>
   );
 };
 
 // Компонент для отображения товаров
-const ProductGrid = ({ condition }: { condition?: "new" | "used" }) => {
-  // Имитация данных товаров
-  const products = [
-    { id: 1, title: "iPhone 13", price: 45000, condition: "used", seller: "Анна К.", image: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=500&auto=format" },
-    { id: 2, title: "Ноутбук Asus", price: 65000, condition: "new", seller: "МегаМаг", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format" },
-    { id: 3, title: "Наушники Sony", price: 7500, condition: "used", seller: "Максим Д.", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format" },
-    { id: 4, title: "Кроссовки Nike", price: 5900, condition: "new", seller: "СпортМаркет", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format" },
-    { id: 5, title: "Книжная полка", price: 3500, condition: "used", seller: "Елена В.", image: "https://images.unsplash.com/photo-1588447555751-22da59a3d175?w=500&auto=format" },
-    { id: 6, title: "Смарт-часы", price: 11900, condition: "new", seller: "ТехноСтор", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format" },
-    { id: 7, title: "Фотоаппарат Canon", price: 24000, condition: "used", seller: "Артем П.", image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=500&auto=format" },
-    { id: 8, title: "Велосипед Trek", price: 32000, condition: "used", seller: "Николай С.", image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&auto=format" },
-  ];
-
+const ProductGrid = ({ products, condition }: { products: any[], condition?: "new" | "used" }) => {
   // Фильтрация по состоянию, если указано
   const filteredProducts = condition 
     ? products.filter(product => product.condition === condition)
